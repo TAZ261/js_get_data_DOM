@@ -3,15 +3,25 @@
 // write your code here
 const populations = document.querySelectorAll('.population');
 
-const values = Array.from(populations).map((el) => {
-  return Number(el.textContent.replace(/,/g, ''));
-});
+// Перетворюємо текст у числа та фільтруємо некоректні
+const values = Array.from(populations)
+  .map((el) => {
+    const txt = el.textContent.trim().replace(/,/g, ''); // прибираємо коми
+    const num = Number(txt);
+
+    return Number.isFinite(num) ? num : null;
+  })
+  .filter((num) => num !== null);
 
 const total = values.reduce((sum, num) => sum + num, 0);
-const average = total / values.length;
+const average = values.length > 0 ? Math.round(total / values.length) : 0;
 
-document.querySelector('.total-population').textContent =
-  total.toLocaleString('en-US');
+const separator = ',';
 
-document.querySelector('.average-population').textContent =
-  average.toLocaleString('en-US');
+document.querySelector('.total-population').textContent = total
+  .toLocaleString('en-US')
+  .replace(/,/g, separator);
+
+document.querySelector('.average-population').textContent = average
+  .toLocaleString('en-US')
+  .replace(/,/g, separator);
